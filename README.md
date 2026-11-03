@@ -57,6 +57,7 @@ flowchart LR
 GitHub Actions Build, Test და Deploy.
 
 ![CI/CD პაიპლაინი](screenshots/ci.png)
+![CI/CD Green](screenshots/all-green.png)
 
 ### 2. იუნიტ ტესტების გაშვება
 
