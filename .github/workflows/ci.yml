@@ -10,16 +10,16 @@ env:
   NODE_VERSION: 20
 
 jobs:
-  # 1) BUILD: prepare environment, install dependencies, verify the app loads
+  # 1) BUILD
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -30,17 +30,17 @@ jobs:
       - name: Build
         run: npm run build
 
-  # 2) TEST: run the automated tests
+  # 2) TEST
   test:
     name: Test
     runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -51,7 +51,7 @@ jobs:
       - name: Run unit tests
         run: npm test
 
-  # 3) DEPLOY: ship to Vercel (only on push to main), then health check
+  # 3) DEPLOY
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
@@ -62,10 +62,10 @@ jobs:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -87,14 +87,12 @@ jobs:
 
       - name: Health check deployed app
         env:
-          # Set repo variable PRODUCTION_URL (e.g. https://your-app.vercel.app).
-          # Falls back to the deployment URL if not set.
           APP_URL: ${{ vars.PRODUCTION_URL || steps.deploy.outputs.url }}
         run: bash scripts/healthcheck.sh "$APP_URL" healthcheck.log
 
       - name: Upload health check log
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: healthcheck-log
           path: healthcheck.log
